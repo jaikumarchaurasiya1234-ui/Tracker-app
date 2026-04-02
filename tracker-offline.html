@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>NEET/JEE Tracker 2027</title>
+<style>
+/* Offline-safe font fallbacks */
+@font-face {
+  font-family: 'Rajdhani';
+  src: local('Arial Black'), local('Impact'), local('sans-serif');
+  font-weight: 400 700;
+}
+</style>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;width:100%;overflow:hidden;background:#0d0f14;color:#f0f2f5;font-family:'Arial','Helvetica',sans-serif;font-size:14px;}
+:root{--bg:#0d0f14;--sf:#161a22;--sf2:#1e2330;--b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);--ac:#f7c948;--ac2:#e8a020;--gn:#3ecf8e;--rd:#f06878;--pr:#9b78f6;--tx:#f0f2f5;--mt:#8891a4;--fh:'Arial Black','Impact','Arial',sans-serif;--r:12px;--rs:8px;}
+.screen{position:fixed;inset:0;background:var(--bg);transform:translateX(100%);transition:transform 0.38s cubic-bezier(0.4,0,0.2,1);overflow:hidden;display:flex;flex-direction:column;}
+.screen.active{transform:translateX(0);}
+.screen.exit{transform:translateX(-28%);}
+/* ── GLOBAL FIELD ── */
+.field{margin-bottom:1rem;}
+.field label{display:block;font-size:10px;color:var(--mt);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;}
+.field input,.field select{width:100%;background:var(--bg);border:.5px solid var(--b2);border-radius:var(--rs);padding:11px 14px;color:var(--tx);font-size:14px;font-family:'Arial','Helvetica',sans-serif;outline:none;transition:border-color .2s;}
+.field input:focus,.field select:focus{border-color:var(--ac);}
+.field input::placeholder{color:rgba(136,145,164,.4);}
+.bgold{width:100%;border:none;border-radius:var(--rs);padding:14px;font-family:var(--fh);font-size:18px;font-weight:700;letter-spacing:1px;cursor:pointer;background:var(--ac);color:#0d0f14;margin-top:6px;transition:all .15s;}
+.bgold:active{background:var(--ac2);transform:scale(.98);}
+.emsg{color:var(--rd);font-size:12px;margin-top:8px;display:none;}
+/* ── SPLASH ── */
+#splash{position:absolute;inset:0;background:#0d0f14;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;overflow:hidden;}
+.sring{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(247,201,72,0.09) 0%,transparent 70%);width:80vw;height:80vw;max-width:400px;max-height:400px;animation:sp 2.6s ease-in-out infinite;}
+@keyframes sp{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(1.14);opacity:1}}
+.swrap{display:flex;flex-direction:column;align-items:center;opacity:0;transform:scale(.55);animation:si .72s cubic-bezier(.34,1.56,.64,1) .25s forwards;}
+@keyframes si{to{opacity:1;transform:scale(1)}}
+.sname{font-family:'Rajdhani',sans-serif;font-size:30px;font-weight:700;color:#f7c948;letter-spacing:4px;margin-top:20px;opacity:0;animation:sfu .5s ease .95s forwards;}
+.stag{font-size:11px;color:#7a8494;letter-spacing:3px;text-transform:uppercase;margin-top:5px;opacity:0;animation:sfu .5s ease 1.15s forwards;}
+.sbarw{position:absolute;bottom:60px;width:54px;height:3px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;opacity:0;animation:sfu .4s ease 1.2s forwards;}
+.sbarf{height:100%;width:0%;background:#f7c948;border-radius:3px;animation:sbl 1.1s ease 1.3s forwards;}
+@keyframes sfu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sbl{to{width:100%}}
+/* ── S1 REGISTRATION ── */
+#s1{background:radial-gradient(ellipse at 50% -5%,#1a2540 0%,#0d0f14 65%);}
+.s1b{display:flex;flex-direction:column;align-items:center;padding:3rem 1.5rem 2.5rem;min-height:100%;overflow-y:auto;}
+.s1b::-webkit-scrollbar{display:none;}
+.logo{font-family:var(--fh);font-size:52px;font-weight:700;color:var(--ac);letter-spacing:3px;text-align:center;line-height:1;}
+.lsub{font-family:var(--fh);font-size:11px;letter-spacing:5px;color:var(--mt);margin-top:5px;text-align:center;}
+.badge{background:rgba(247,201,72,.1);border:.5px solid rgba(247,201,72,.3);border-radius:20px;padding:4px 16px;font-size:11px;color:var(--ac);letter-spacing:1px;margin:18px 0 22px;}
+.card{background:var(--sf);border:.5px solid var(--b2);border-radius:var(--r);padding:1.5rem;width:100%;max-width:360px;}
+.ct{font-family:var(--fh);font-size:21px;font-weight:600;margin-bottom:4px;}
+.cs{font-size:12px;color:var(--mt);margin-bottom:1.25rem;line-height:1.5;}
+/* ── S2 PIN ── */
+#s2{background:radial-gradient(ellipse at 50% -5%,#1a2540 0%,#0d0f14 65%);align-items:center;justify-content:center;}
+.s2i{display:flex;flex-direction:column;align-items:center;padding:2rem 1.5rem;width:100%;}
+.wbl{font-family:var(--fh);font-size:13px;color:var(--mt);letter-spacing:3px;text-transform:uppercase;text-align:center;}
+.wbn{font-family:var(--fh);font-size:44px;font-weight:700;color:var(--ac);text-align:center;margin:6px 0 2rem;line-height:1.1;}
+.pc{background:var(--sf);border:.5px solid var(--b2);border-radius:var(--r);padding:1.5rem;width:100%;max-width:310px;}
+.pc h3{font-family:var(--fh);font-size:18px;font-weight:600;text-align:center;margin-bottom:1.2rem;}
+.dots{display:flex;gap:14px;justify-content:center;margin-bottom:.6rem;}
+.dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--b2);background:transparent;transition:all .18s;}
+.dot.on{background:var(--ac);border-color:var(--ac);transform:scale(1.15);}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.dot.sh{animation:shake .42s;}
+.lerr{color:var(--rd);font-size:12px;text-align:center;height:20px;margin-bottom:.5rem;}
+.np{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.nk{background:var(--sf2);border:.5px solid var(--b);border-radius:var(--rs);padding:15px 6px;font-family:var(--fh);font-size:24px;font-weight:600;color:var(--tx);text-align:center;cursor:pointer;transition:all .12s;user-select:none;}
+.nk:active{background:rgba(247,201,72,.14);transform:scale(.91);}
+.nk.gh{background:transparent;border-color:transparent;cursor:default;}
+.nk.dl{font-size:18px;color:var(--mt);}
+/* ── S4 SCHEDULE BUILDER ── */
+#s4{background:var(--bg);flex-direction:column;}
+.s4-hdr{background:var(--sf);border-bottom:.5px solid var(--b);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.s4-hdr h1{font-family:var(--fh);font-size:20px;font-weight:700;color:var(--ac);letter-spacing:1px;}
+.s4-hdr p{font-size:11px;color:var(--mt);}
+.s4-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 100px;}
+.s4-body::-webkit-scrollbar{display:none;}
+.s4-intro{background:var(--sf);border:.5px solid var(--b2);border-radius:var(--r);padding:14px;margin-bottom:14px;}
+.s4-intro p{font-size:12px;color:var(--mt);line-height:1.6;}
+.s4-intro b{color:var(--ac);}
+/* timetable picker */
+.tt-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.tt-card{background:var(--sf2);border:1.5px solid var(--b);border-radius:var(--r);padding:12px;cursor:pointer;transition:all .18s;}
+.tt-card.sel{border-color:var(--ac);background:rgba(247,201,72,.06);}
+.tt-card-icon{font-size:22px;margin-bottom:6px;}
+.tt-card-name{font-family:var(--fh);font-size:14px;font-weight:600;color:var(--tx);margin-bottom:3px;}
+.tt-card-sub{font-size:10px;color:var(--mt);line-height:1.4;}
+.tt-card.custom-card{grid-column:1/-1;display:flex;align-items:center;gap:12px;}
+.tt-card.custom-card .tt-card-name{font-size:15px;}
+/* slot form rows */
+.slt-row{background:var(--sf);border:.5px solid var(--b);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;position:relative;}
+.slt-fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.slt-fields.three{grid-template-columns:1fr 1fr 1fr;}
+.slt-lbl{font-size:9px;color:var(--mt);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;}
+.slt-inp{width:100%;background:var(--bg);border:.5px solid var(--b2);border-radius:6px;padding:8px 10px;color:var(--tx);font-size:12px;font-family:'Arial','Helvetica',sans-serif;outline:none;}
+.slt-inp:focus{border-color:var(--ac);}
+.slt-inp::placeholder{color:rgba(136,145,164,.35);}
+.slt-sel{width:100%;background:var(--bg);border:.5px solid var(--b2);border-radius:6px;padding:8px 10px;color:var(--tx);font-size:12px;font-family:'Arial','Helvetica',sans-serif;outline:none;appearance:none;-webkit-appearance:none;}
+.slt-sel:focus{border-color:var(--ac);}
+.slt-del{position:absolute;top:8px;right:10px;background:transparent;border:none;color:var(--mt);font-size:18px;cursor:pointer;line-height:1;padding:0;}
+.s4-addbtns{display:flex;gap:8px;margin-bottom:8px;}
+.s4-addbtn{flex:1;background:transparent;border:.5px dashed var(--b2);border-radius:var(--rs);padding:10px;color:var(--mt);font-size:12px;font-family:var(--fh);cursor:pointer;text-align:center;transition:all .15s;}
+.s4-addbtn:active{background:var(--sf);border-color:var(--ac);color:var(--ac);}
+.s4-bar{position:fixed;bottom:0;left:0;right:0;background:var(--sf);border-top:.5px solid var(--b);padding:12px 14px;display:flex;gap:10px;z-index:10;}
+.s4-bar-skip{flex:1;background:transparent;border:.5px solid var(--b2);border-radius:var(--rs);padding:13px;color:var(--mt);font-family:var(--fh);font-size:15px;cursor:pointer;}
+.s4-bar-save{flex:2;background:var(--ac);border:none;border-radius:var(--rs);padding:13px;color:#0d0f14;font-family:var(--fh);font-size:17px;font-weight:700;cursor:pointer;letter-spacing:.5px;}
+.s4-bar-save:active{background:var(--ac2);}
+.s4-err{background:rgba(240,104,120,.08);border:.5px solid rgba(240,104,120,.25);border-radius:var(--rs);padding:10px 14px;font-size:12px;color:var(--rd);margin-bottom:10px;display:none;}
+.s4-err.show{display:block;}
+.sec-divider{display:flex;align-items:center;gap:8px;margin:14px 0 8px;}
+.sec-divider::before,.sec-divider::after{content:'';flex:1;height:.5px;background:var(--b);}
+.sec-divider span{font-size:9px;color:var(--mt);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap;}
+/* ── S3 MAIN APP ── */
+#s3{flex-direction:column;}
+.ab2{background:var(--sf);border-bottom:.5px solid var(--b);padding:0 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.ab2 h1{font-family:var(--fh);font-size:20px;font-weight:700;color:var(--ac);letter-spacing:1px;}
+.ab2 p{font-size:11px;color:var(--mt);}
+.lkb{background:transparent;border:.5px solid var(--b2);border-radius:var(--rs);padding:7px 12px;color:var(--mt);font-size:12px;cursor:pointer;}
+.lkb:active{background:var(--b);}
+/* HOME TABS (Schedule / Syllabus) */
+.home-tabs{display:flex;background:var(--sf);border-bottom:.5px solid var(--b);flex-shrink:0;}
+.home-tab{flex:1;padding:12px 4px;text-align:center;font-family:var(--fh);font-size:15px;font-weight:600;color:var(--mt);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;letter-spacing:.5px;}
+.home-tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.home-panel{display:none;flex:1;overflow:hidden;flex-direction:column;}
+.home-panel.on{display:flex;}
+/* ── SCHEDULE PANEL ── */
+.tbar{display:flex;background:var(--sf2);border-bottom:.5px solid var(--b);flex-shrink:0;}
+.tab{flex:1;padding:9px 4px;text-align:center;font-family:var(--fh);font-size:13px;font-weight:500;color:var(--mt);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;letter-spacing:.5px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:24px;}
+.panel.on{display:block;}
+.panel::-webkit-scrollbar{display:none;}
+.dr{padding:10px 14px;display:flex;gap:10px;align-items:center;background:var(--sf2);border-bottom:.5px solid var(--b);}
+.dr input{flex:1;background:var(--bg);border:.5px solid var(--b2);border-radius:var(--rs);padding:8px 12px;color:var(--tx);font-size:13px;outline:none;font-family:'Arial','Helvetica',sans-serif;}
+.tdb{background:transparent;border:.5px solid var(--ac);border-radius:var(--rs);padding:8px 13px;color:var(--ac);font-size:12px;font-family:var(--fh);cursor:pointer;letter-spacing:.5px;}
+.tdb:active{background:rgba(247,201,72,.1);}
+.sr{display:flex;gap:8px;padding:12px 14px 6px;}
+.sb2{flex:1;background:var(--sf);border:.5px solid var(--b);border-radius:var(--rs);padding:10px 6px;text-align:center;}
+.sb2 .sn{font-family:var(--fh);font-size:28px;font-weight:700;line-height:1;}
+.sb2 .sl{font-size:9px;color:var(--mt);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;}
+.g{color:var(--gn)}.rd2{color:var(--rd)}.mt{color:var(--mt)}
+.pw{padding:0 14px 10px;}.pb{height:3px;background:var(--b);border-radius:3px;overflow:hidden;}
+.pf{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gn),var(--ac));transition:width .4s;}
+.sh2{padding:6px 14px;background:var(--bg);font-size:10px;color:var(--mt);text-transform:uppercase;letter-spacing:.1em;border-top:.5px solid var(--b);}
+.slr{display:grid;grid-template-columns:88px 1fr 42px 42px;align-items:start;gap:8px;padding:10px 14px;border-bottom:.5px solid var(--b);}
+.stm{font-size:11px;color:var(--mt);line-height:1.45;padding-top:3px;}
+.stg{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.05em;padding:2px 7px;border-radius:10px;text-transform:uppercase;margin-bottom:3px;}
+.tp{background:rgba(91,156,246,.15);color:#5b9cf6;}
+.tc{background:rgba(247,201,72,.15);color:#f7c948;}
+.tb{background:rgba(62,207,142,.15);color:#3ecf8e;}
+.tv{background:rgba(240,104,120,.15);color:#f06878;}
+.tr{background:rgba(136,145,164,.15);color:#8891a4;}
+.tbr{background:rgba(155,120,246,.15);color:#9b78f6;}
+.snm{font-size:13px;color:var(--tx);line-height:1.3;}
+.snm.dk{text-decoration:line-through;color:var(--mt);}
+.snm.mr{color:var(--rd);}
+.nb{width:100%;background:transparent;border:none;border-top:.5px solid var(--b);margin-top:5px;padding:4px 0 0;font-size:11px;color:var(--mt);font-family:'Arial','Helvetica',sans-serif;outline:none;resize:none;overflow:hidden;min-height:16px;}
+.nb::placeholder{color:rgba(136,145,164,.3);}
+.nb:focus{color:var(--tx);}
+.ac{display:flex;align-items:flex-start;justify-content:center;padding-top:2px;}
+.ab{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--b2);background:transparent;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--mt);transition:all .15s;}
+.ab:active{transform:scale(.88);}
+.ab.ton{background:rgba(62,207,142,.15);border-color:var(--gn);color:var(--gn);}
+.ab.xon{background:rgba(240,104,120,.15);border-color:var(--rd);color:var(--rd);}
+/* week */
+.ww{padding:14px;}
+.wn{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.wb{background:var(--sf);border:.5px solid var(--b2);border-radius:var(--rs);padding:7px 13px;color:var(--tx);font-size:13px;cursor:pointer;}
+.wl{font-size:12px;color:var(--mt);}
+.wg{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:14px;}
+.dc{background:var(--sf);border:.5px solid var(--b);border-radius:var(--rs);padding:7px 3px;text-align:center;cursor:pointer;}
+.dc.tdy{border-color:var(--ac);}
+.dcd{font-size:9px;color:var(--mt);text-transform:uppercase;}
+.dcn{font-family:var(--fh);font-size:18px;font-weight:600;margin:2px 0;}
+.dcs{font-size:9px;color:var(--mt);}
+.dcb{height:3px;border-radius:2px;background:var(--b);margin-top:4px;overflow:hidden;}
+.dcf{height:100%;border-radius:2px;}
+.ws{background:var(--sf);border:.5px solid var(--b);border-radius:var(--r);padding:1rem;}
+.ws h4{font-family:var(--fh);font-size:17px;margin-bottom:10px;}
+.wr{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:.5px solid var(--b);font-size:13px;}
+.wr:last-child{border-bottom:none;}
+.wrl{color:var(--mt);}
+.wrv{font-family:var(--fh);font-size:17px;font-weight:600;}
+/* report */
+.rw{padding:14px;}
+.rc{background:var(--sf);border:.5px solid var(--b);border-radius:var(--r);padding:1.25rem;margin-bottom:12px;}
+.rc h4{font-family:var(--fh);font-size:17px;margin-bottom:12px;color:var(--ac);}
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.mb3{background:var(--bg);border-radius:var(--rs);padding:12px;text-align:center;}
+.mn{font-family:var(--fh);font-size:28px;font-weight:700;line-height:1;}
+.ml{font-size:10px;color:var(--mt);text-transform:uppercase;letter-spacing:.05em;margin-top:3px;}
+.wab{width:100%;background:#25D366;border:none;border-radius:var(--rs);padding:13px;color:#fff;font-family:var(--fh);font-size:17px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px;}
+.rb{width:100%;background:transparent;border:1px solid var(--rd);border-radius:var(--rs);padding:12px;color:var(--rd);font-family:var(--fh);font-size:16px;font-weight:600;cursor:pointer;margin-top:6px;}
+/* reset modal */
+.mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:300;align-items:center;justify-content:center;padding:1.5rem;}
+.mbg.open{display:flex;}
+.mb2{background:var(--sf);border:.5px solid var(--b2);border-radius:var(--r);padding:1.5rem;width:100%;max-width:330px;}
+.mb2 h3{font-family:var(--fh);font-size:20px;margin-bottom:8px;}
+.mb2 p{font-size:13px;color:var(--mt);line-height:1.6;margin-bottom:1rem;}
+.mbtns{display:flex;gap:8px;}
+.mbtn{flex:1;border-radius:var(--rs);padding:11px;font-family:var(--fh);font-size:15px;font-weight:600;cursor:pointer;border:none;}
+.mbtn.cc{background:var(--sf2);color:var(--mt);}
+.mbtn.dd{background:var(--rd);color:#fff;}
+/* ── SYLLABUS PANEL ── */
+.syl-wrap{flex:1;overflow:hidden;display:flex;flex-direction:column;}
+.syl-exam-tabs{display:flex;gap:0;border-bottom:.5px solid var(--b);flex-shrink:0;background:var(--sf2);}
+.syl-exam-tab{flex:1;padding:10px;text-align:center;font-family:var(--fh);font-size:14px;color:var(--mt);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;}
+.syl-exam-tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.syl-subj-list{overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1;}
+.syl-subj-list::-webkit-scrollbar{display:none;}
+.subj-card{margin:10px 14px 0;background:var(--sf);border:.5px solid var(--b2);border-radius:var(--r);overflow:hidden;}
+.subj-head{display:flex;align-items:center;padding:12px 14px;cursor:pointer;gap:10px;}
+.subj-icon{font-size:20px;flex-shrink:0;}
+.subj-name{font-family:var(--fh);font-size:17px;font-weight:600;flex:1;}
+.subj-prog{font-size:11px;color:var(--mt);}
+.subj-arrow{font-size:12px;color:var(--mt);transition:transform .2s;}
+.subj-arrow.open{transform:rotate(90deg);}
+.subj-chapters{display:none;border-top:.5px solid var(--b);}
+.subj-chapters.open{display:block;}
+/* chapter table header */
+.ch-thead{display:grid;grid-template-columns:1fr 52px 52px 52px;gap:4px;padding:7px 12px;background:var(--sf2);border-bottom:.5px solid var(--b);}
+.ch-thead span{font-size:9px;color:var(--mt);text-transform:uppercase;letter-spacing:.07em;text-align:center;}
+.ch-thead span:first-child{text-align:left;}
+/* chapter row */
+.ch-row{display:grid;grid-template-columns:1fr 52px 52px 52px;gap:4px;padding:9px 12px;border-bottom:.5px solid var(--b);align-items:center;}
+.ch-row:last-child{border-bottom:none;}
+.ch-name{font-size:12px;color:var(--tx);line-height:1.35;}
+.ch-num{font-size:9px;color:var(--mt);margin-bottom:1px;}
+.ch-tick{display:flex;align-items:center;justify-content:center;}
+.tick-btn{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--b2);background:transparent;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--mt);transition:all .15s;flex-shrink:0;}
+.tick-btn:active{transform:scale(.88);}
+.tick-btn.done{background:rgba(62,207,142,.15);border-color:var(--gn);color:var(--gn);}
+.tick-btn.skip{background:rgba(240,104,120,.15);border-color:var(--rd);color:var(--rd);}
+.subj-pbar{height:3px;background:var(--b);}
+.subj-pfill{height:100%;background:linear-gradient(90deg,var(--gn),var(--ac));transition:width .4s;}
+/* last spacer */
+.bottom-pad{height:14px;}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="sring"></div>
+  <div class="swrap">
+    <div class="sname">NEET / JEE</div>
+    <div class="stag">Tracker 2027</div>
+  </div>
+  <div class="sbarw"><div class="sbarf"></div></div>
+</div>
+
+<!-- S1: REGISTRATION -->
+<div class="screen" id="s1">
+  <div class="s1b">
+    <div class="logo">TRACKER</div>
+    <div class="lsub">NEET &middot; JEE &middot; 2027</div>
+    <div class="badge">FIRST TIME SETUP</div>
+    <div class="card">
+      <div class="ct">Parent Registration</div>
+      <div class="cs">Fill this once. Saved permanently on this device.</div>
+      <div class="field"><label>Student Name</label><input id="fstu" type="text" placeholder="e.g. Arjun"/></div>
+      <div class="field"><label>Your Name (Parent / Guardian)</label><input id="fnm" type="text" placeholder="e.g. Suresh Kumar"/></div>
+      <div class="field"><label>WhatsApp Number (with country code)</label><input id="fph" type="tel" placeholder="+91 98765 43210"/></div>
+      <div class="field"><label>Exam Target</label>
+        <select id="fexam">
+          <option value="NEET">NEET 2027</option>
+          <option value="JEE">JEE 2027</option>
+        </select>
+      </div>
+      <div class="field"><label>Set 4-Digit PIN</label><input id="fpin" type="password" inputmode="numeric" maxlength="4" placeholder="e.g. 1234"/></div>
+      <div class="emsg" id="e1">Please fill all fields. PIN must be exactly 4 digits.</div>
+      <button class="bgold" onclick="doSetup()">SETUP &amp; START &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<!-- S2: PIN LOCK -->
+<div class="screen" id="s2">
+  <div class="s2i">
+    <div class="wbl">Welcome Back</div>
+    <div class="wbn" id="wname">Parent</div>
+    <div class="pc">
+      <h3>Enter PIN to Unlock</h3>
+      <div class="dots"><div class="dot" id="d0"></div><div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div></div>
+      <div class="lerr" id="lerr"></div>
+      <div class="np">
+        <div class="nk" onclick="kp('1')">1</div><div class="nk" onclick="kp('2')">2</div><div class="nk" onclick="kp('3')">3</div>
+        <div class="nk" onclick="kp('4')">4</div><div class="nk" onclick="kp('5')">5</div><div class="nk" onclick="kp('6')">6</div>
+        <div class="nk" onclick="kp('7')">7</div><div class="nk" onclick="kp('8')">8</div><div class="nk" onclick="kp('9')">9</div>
+        <div class="nk gh"></div><div class="nk" onclick="kp('0')">0</div><div class="nk dl" onclick="kdel()">&#9003;</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S4: SCHEDULE BUILDER -->
+<div class="screen" id="s4">
+  <div class="s4-hdr"><div><h1>TRACKER 2027</h1><p>Schedule Setup</p></div></div>
+  <div class="s4-body" id="s4-body">
+    <div class="s4-intro"><p>Choose a <b>preset timetable</b> below, or build your own by tapping the buttons. You can always edit later.</p></div>
+    <div style="font-size:10px;color:var(--mt);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;">Select a Preset Timetable</div>
+    <div class="tt-grid" id="tt-grid">
+      <div class="tt-card" onclick="selectTT(0)"><div class="tt-card-icon">🌙</div><div class="tt-card-name">NEET Daily Intensive</div><div class="tt-card-sub">4 AM start · Deep study + 3 lectures · 11 PM sleep</div></div>
+      <div class="tt-card" onclick="selectTT(1)"><div class="tt-card-icon">🎬</div><div class="tt-card-name">NEET + Vlog</div><div class="tt-card-sub">Yakeen 2.0 · Study + 6 daily vlog clips</div></div>
+      <div class="tt-card" onclick="selectTT(2)"><div class="tt-card-icon">☀️</div><div class="tt-card-name">PW Online Batch</div><div class="tt-card-sub">5:30 AM start · PW lectures + self study</div></div>
+      <div class="tt-card custom-card" onclick="selectTT(-1)"><div class="tt-card-icon">✏️</div><div><div class="tt-card-name">Build Custom Schedule</div><div class="tt-card-sub">Add your own time slots manually</div></div></div>
+    </div>
+    <div id="s4-slots"></div>
+    <div class="s4-err" id="s4-err"></div>
+    <div class="s4-addbtns" id="s4-addbtns" style="display:none;">
+      <button class="s4-addbtn" onclick="addSection()">+ Section</button>
+      <button class="s4-addbtn" onclick="addSlot()">+ Add Slot</button>
+    </div>
+  </div>
+  <div class="s4-bar">
+    <button class="s4-bar-skip" onclick="skipScheduleUpload()">Skip</button>
+    <button class="s4-bar-save" onclick="saveManualSchedule()">SAVE &amp; START &#8594;</button>
+  </div>
+</div>
+
+<!-- S3: MAIN APP -->
+<div class="screen" id="s3">
+  <div class="ab2" style="padding:10px 16px;">
+    <div><h1>TRACKER 2027</h1><p id="asub">Loading…</p></div>
+    <button class="lkb" onclick="doLock()">&#128274; Lock</button>
+  </div>
+  <!-- HOME TABS -->
+  <div class="home-tabs">
+    <div class="home-tab on" id="ht-sched" onclick="setHomeTab('schedule')">📅 SCHEDULE</div>
+    <div class="home-tab" id="ht-syl" onclick="setHomeTab('syllabus')">📚 SYLLABUS</div>
+  </div>
+
+  <!-- SCHEDULE HOME PANEL -->
+  <div class="home-panel on" id="hp-schedule" style="overflow:hidden;">
+    <div class="tbar">
+      <div class="tab on" id="tt" onclick="setTab('today')">TODAY</div>
+      <div class="tab" id="tw" onclick="setTab('week')">WEEK</div>
+      <div class="tab" id="tr" onclick="setTab('report')">REPORT</div>
+    </div>
+    <div class="panel on" id="pt">
+      <div class="dr"><input type="date" id="di" onchange="onDC()"/><button class="tdb" onclick="goToday()">TODAY</button></div>
+      <div class="sr">
+        <div class="sb2"><div class="sn g" id="cd">0</div><div class="sl">Done</div></div>
+        <div class="sb2"><div class="sn rd2" id="cm">0</div><div class="sl">Missed</div></div>
+        <div class="sb2"><div class="sn mt" id="cp">0</div><div class="sl">Pending</div></div>
+      </div>
+      <div class="pw"><div class="pb"><div class="pf" id="pf" style="width:0%"></div></div></div>
+      <div id="sch"></div>
+    </div>
+    <div class="panel" id="pw">
+      <div class="ww">
+        <div class="wn"><button class="wb" onclick="sw(-1)">&larr; Prev</button><span class="wl" id="wlbl"></span><button class="wb" onclick="sw(1)">Next &rarr;</button></div>
+        <div class="wg" id="wgrid"></div>
+        <div class="ws" id="wsum"></div>
+      </div>
+    </div>
+    <div class="panel" id="prp">
+      <div class="rw">
+        <div class="rc"><h4>&#128202; Monthly Report</h4><div class="mg" id="mstat"></div><div id="mdays"></div></div>
+        <div class="rc"><h4>&#128172; Send via WhatsApp</h4><p style="font-size:13px;color:var(--mt);margin-bottom:4px;">Send full monthly report to registered number.</p><button class="wab" onclick="sendWA()">&#128242; Send WhatsApp Report</button></div>
+        <div class="rc"><h4 style="color:var(--rd)">&#128465; Reset Month Data</h4><p style="font-size:13px;color:var(--mt);margin-bottom:4px;">Clear all data for this month.</p><button class="rb" onclick="openMdl()">Reset This Month's Data</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SYLLABUS HOME PANEL -->
+  <div class="home-panel" id="hp-syllabus">
+    <div class="syl-wrap">
+      <div class="syl-exam-tabs">
+        <div class="syl-exam-tab on" id="set-neet" onclick="setSylExam('NEET')">NEET</div>
+        <div class="syl-exam-tab" id="set-jee" onclick="setSylExam('JEE')">JEE</div>
+      </div>
+      <div class="syl-subj-list" id="syl-subj-list"><div class="bottom-pad"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- RESET MODAL -->
+<div class="mbg" id="mdl">
+  <div class="mb2">
+    <h3>Reset Monthly Data?</h3>
+    <p>All records for this month will be permanently deleted.</p>
+    <div class="mbtns"><button class="mbtn cc" onclick="closeMdl()">Cancel</button><button class="mbtn dd" onclick="doReset()">Yes, Reset</button></div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════
+   DATA — TIMETABLES
+═══════════════════════════════════════════ */
+const PRESETS=[
+  // 0 — NEET Daily Intensive
+  [
+    {s:"Early Morning"},
+    {id:1,t:"4:00-4:15 AM",k:"Wake up & Freshen up",g:"tr",l:"Wake Up"},
+    {id:2,t:"4:15-6:15 AM",k:"Deep Study — Biology Revision, NCERT",g:"tb",l:"Bio Study"},
+    {id:3,t:"6:15-6:45 AM",k:"Breakfast",g:"tbr",l:"Breakfast"},
+    {s:"Morning Study"},
+    {id:4,t:"6:45-8:15 AM",k:"Practice — Physics / Chemistry MCQs",g:"tp",l:"MCQ Prac."},
+    {id:5,t:"8:30-10:30 AM",k:"Lecture 1",g:"tp",l:"Lecture 1"},
+    {id:6,t:"10:30-10:45 AM",k:"Short Break",g:"tbr",l:"Break"},
+    {id:7,t:"10:45-12:15 PM",k:"Lecture 2",g:"tc",l:"Lecture 2"},
+    {s:"Afternoon"},
+    {id:8,t:"12:15-12:30 PM",k:"Break",g:"tbr",l:"Break"},
+    {id:9,t:"12:30-2:00 PM",k:"Lecture 3",g:"tb",l:"Lecture 3"},
+    {id:10,t:"2:00-2:45 PM",k:"Lunch",g:"tbr",l:"Lunch"},
+    {id:11,t:"2:45-4:15 PM",k:"Lecture Revision",g:"tr",l:"Revision"},
+    {id:12,t:"4:15-4:45 PM",k:"Break",g:"tbr",l:"Break"},
+    {s:"Evening"},
+    {id:13,t:"4:45-6:45 PM",k:"Practice Session",g:"tp",l:"Practice"},
+    {id:14,t:"6:45-7:30 PM",k:"Dinner",g:"tbr",l:"Dinner"},
+    {s:"Night"},
+    {id:15,t:"7:30-9:30 PM",k:"Revision — Biology + Formulas",g:"tb",l:"Bio+Form"},
+    {id:16,t:"9:30-10:30 PM",k:"Light Study",g:"tr",l:"Light Study"},
+    {id:17,t:"10:30-11:00 PM",k:"Relax & Sleep Prep",g:"tbr",l:"Sleep"}
+  ],
+  // 1 — NEET + Vlog (Yakeen 2.0)
+  [
+    {s:"Morning"},
+    {id:1,t:"4:00-4:10 AM",k:"Wake-up Shoot — Morning Clip",g:"tv",l:"Vlog"},
+    {id:2,t:"4:10-6:40 AM",k:"Morning Routine (Brush, Bath, Exercise, Pooja)",g:"tr",l:"Routine"},
+    {s:"Study Block 1"},
+    {id:3,t:"6:40-8:40 AM",k:"Revision + Module — Physics / Chemistry",g:"tp",l:"Phys/Chem"},
+    {s:"Live Lectures"},
+    {id:4,t:"8:45-10:45 AM",k:"Lecture 1 — Physics (Live)",g:"tp",l:"Physics"},
+    {id:5,t:"10:45-11:00 AM",k:"Short Break + Post-Physics Vlog Shoot",g:"tv",l:"Vlog"},
+    {id:6,t:"11:00-12:45 PM",k:"Lecture 2 — Physical Chemistry (Live)",g:"tc",l:"Chemistry"},
+    {id:7,t:"12:45-1:15 PM",k:"Lunch Break + Mid-day Vlog Shoot",g:"tv",l:"Vlog"},
+    {id:8,t:"1:15-3:00 PM",k:"Lecture 3 — Biology (Live)",g:"tb",l:"Biology"},
+    {s:"Afternoon"},
+    {id:9,t:"3:00-3:30 PM",k:"Chai Break + Honest Reaction Clip",g:"tbr",l:"Break"},
+    {id:10,t:"3:30-5:00 PM",k:"NCERT Biology — Line by line reading",g:"tb",l:"Biology"},
+    {id:11,t:"5:00-5:30 PM",k:"Free Time + Shoot + Edit (CapCut/VN)",g:"tv",l:"Vlog"},
+    {s:"Evening"},
+    {id:12,t:"5:30-8:00 PM",k:"Homework — All 3 Subjects + DPPs",g:"tr",l:"HW/DPP"},
+    {id:13,t:"8:00-8:15 PM",k:"DPP Score Reveal Shoot",g:"tv",l:"Vlog"},
+    {s:"Night"},
+    {id:14,t:"8:15-10:00 PM",k:"Notes Revision — Physics + Chemistry + Bio",g:"tr",l:"Revision"},
+    {id:15,t:"10:00-10:30 PM",k:"End-of-Day Shoot + Final Edit + Upload",g:"tv",l:"Vlog"},
+    {id:16,t:"10:30-11:00 PM",k:"Dinner + Wind Down + Plan Tomorrow",g:"tbr",l:"Wind Down"}
+  ],
+  // 2 — PW Online Batch
+  [
+    {s:"Morning"},
+    {id:1,t:"5:30-5:45 AM",k:"Wake up + Freshen up",g:"tr",l:"Wake Up"},
+    {id:2,t:"5:45-6:15 AM",k:"Exercise (Fitness Reel Recording)",g:"tv",l:"Exercise"},
+    {id:3,t:"6:15-6:30 AM",k:"Bath + Get Ready",g:"tr",l:"Get Ready"},
+    {s:"PW Lectures"},
+    {id:4,t:"7:00-9:00 AM",k:"PW Lecture 1",g:"tp",l:"Lecture 1"},
+    {id:5,t:"9:15-11:15 AM",k:"PW Lecture 2",g:"tc",l:"Lecture 2"},
+    {id:6,t:"11:30-1:30 PM",k:"PW Lecture 3",g:"tb",l:"Lecture 3"},
+    {s:"Afternoon"},
+    {id:7,t:"1:30-2:15 PM",k:"Lunch + Rest",g:"tbr",l:"Lunch"},
+    {id:8,t:"2:15-4:15 PM",k:"Self Study — Revision + DPP",g:"tr",l:"Revision"},
+    {id:9,t:"4:30-6:00 PM",k:"Self Study — NCERT / Backlog",g:"tb",l:"NCERT"},
+    {s:"Evening"},
+    {id:10,t:"6:00-6:45 PM",k:"Video Editing — Vlog + Reel",g:"tv",l:"Editing"},
+    {id:11,t:"6:45-7:30 PM",k:"Dinner + Walk",g:"tbr",l:"Dinner"},
+    {s:"Night"},
+    {id:12,t:"7:30-9:30 PM",k:"Self Study — Practice + PYQs",g:"tr",l:"PYQs"},
+    {id:13,t:"9:30-9:45 PM",k:"Daily Review + Planning",g:"tr",l:"Review"},
+    {id:14,t:"10:00 PM",k:"Sleep",g:"tbr",l:"Sleep"}
+  ]
+];
+
+/* ═══════════════════════════════════════════
+   DATA — SYLLABUS (NEET + JEE, updated NCERT 2024-25)
+═══════════════════════════════════════════ */
+const SYLLABUS={
+  NEET:[
+    {id:'neet-botany',name:'Botany',icon:'🌿',color:'#3ecf8e',chapters:[
+      "The Living World","Biological Classification","Plant Kingdom",
+      "Morphology of Flowering Plants","Anatomy of Flowering Plants",
+      "Cell: The Unit of Life","Cell Cycle and Cell Division",
+      "Transport in Plants","Mineral Nutrition","Photosynthesis in Higher Plants",
+      "Respiration in Plants","Plant Growth and Development",
+      "Sexual Reproduction in Flowering Plants",
+      "Strategies for Enhancement in Food Production",
+      "Microbes in Human Welfare","Biotechnology: Principles and Processes",
+      "Biotechnology and its Applications","Organisms and Populations",
+      "Ecosystem","Biodiversity and Conservation"
+    ]},
+    {id:'neet-zoology',name:'Zoology',icon:'🐾',color:'#f06878',chapters:[
+      "Animal Kingdom","Structural Organisation in Animals",
+      "Digestion and Absorption","Breathing and Exchange of Gases",
+      "Body Fluids and Circulation","Excretory Products and their Elimination",
+      "Locomotion and Movement","Neural Control and Coordination",
+      "Chemical Coordination and Integration",
+      "Human Reproduction","Reproductive Health",
+      "Principles of Inheritance and Variation",
+      "Molecular Basis of Inheritance","Evolution",
+      "Human Health and Disease","Human Welfare: Microbes",
+      "Environmental Issues"
+    ]},
+    {id:'neet-pchem',name:'Physical Chemistry',icon:'⚗️',color:'#f7c948',chapters:[
+      "Some Basic Concepts of Chemistry","Structure of Atom",
+      "States of Matter","Thermodynamics","Equilibrium",
+      "Redox Reactions","Solutions","Electrochemistry",
+      "Chemical Kinetics","Surface Chemistry"
+    ]},
+    {id:'neet-ichem',name:'Inorganic Chemistry',icon:'🔬',color:'#9b78f6',chapters:[
+      "Classification of Elements and Periodicity",
+      "Chemical Bonding and Molecular Structure",
+      "Hydrogen","The s-Block Elements",
+      "The p-Block Elements (Groups 13 & 14)",
+      "The p-Block Elements (Groups 15, 16, 17 & 18)",
+      "The d and f-Block Elements",
+      "Coordination Compounds",
+      "General Principles and Processes of Isolation of Elements"
+    ]},
+    {id:'neet-ochem',name:'Organic Chemistry',icon:'🧪',color:'#5b9cf6',chapters:[
+      "Some Basic Principles and Techniques",
+      "Hydrocarbons","Environmental Chemistry",
+      "Haloalkanes and Haloarenes",
+      "Alcohols, Phenols and Ethers",
+      "Aldehydes, Ketones and Carboxylic Acids",
+      "Amines","Biomolecules","Polymers",
+      "Chemistry in Everyday Life"
+    ]},
+    {id:'neet-phy',name:'Physics',icon:'⚡',color:'#5b9cf6',chapters:[
+      "Physical World & Measurement","Motion in a Straight Line",
+      "Motion in a Plane","Laws of Motion","Work, Energy and Power",
+      "System of Particles and Rotational Motion","Gravitation",
+      "Mechanical Properties of Solids","Mechanical Properties of Fluids",
+      "Thermal Properties of Matter","Thermodynamics",
+      "Kinetic Theory","Oscillations","Waves",
+      "Electric Charges and Fields","Electrostatic Potential and Capacitance",
+      "Current Electricity","Moving Charges and Magnetism",
+      "Magnetism and Matter","Electromagnetic Induction",
+      "Alternating Current","Electromagnetic Waves",
+      "Ray Optics and Optical Instruments","Wave Optics",
+      "Dual Nature of Radiation and Matter","Atoms","Nuclei",
+      "Semiconductor Electronics"
+    ]}
+  ],
+  JEE:[
+    {id:'jee-pchem',name:'Physical Chemistry',icon:'⚗️',color:'#f7c948',chapters:[
+      "Some Basic Concepts of Chemistry","Atomic Structure",
+      "Chemical Bonding & Molecular Structure","States of Matter",
+      "Thermodynamics","Thermochemistry","Equilibrium",
+      "Ionic Equilibrium","Redox Reactions","Solutions",
+      "Electrochemistry","Chemical Kinetics","Surface Chemistry",
+      "Nuclear Chemistry"
+    ]},
+    {id:'jee-ichem',name:'Inorganic Chemistry',icon:'🔬',color:'#9b78f6',chapters:[
+      "Periodic Table & Periodicity","s-Block Elements",
+      "p-Block Elements (13 & 14)","p-Block Elements (15, 16, 17, 18)",
+      "d & f-Block Elements","Coordination Compounds",
+      "Metallurgy","Qualitative Analysis"
+    ]},
+    {id:'jee-ochem',name:'Organic Chemistry',icon:'🧪',color:'#3ecf8e',chapters:[
+      "Basic Organic Chemistry & Techniques","Hydrocarbons",
+      "Haloalkanes & Haloarenes","Alcohols, Phenols & Ethers",
+      "Aldehydes, Ketones & Carboxylic Acids",
+      "Amines","Biomolecules","Polymers",
+      "Practical Organic Chemistry"
+    ]},
+    {id:'jee-phy',name:'Physics',icon:'⚡',color:'#5b9cf6',chapters:[
+      "Kinematics (1D & 2D)","Laws of Motion",
+      "Work, Energy & Power","Rotational Motion",
+      "Gravitation","Properties of Matter",
+      "Fluid Mechanics","Thermal Physics",
+      "Kinetic Theory of Gases","Thermodynamics",
+      "Simple Harmonic Motion","Waves & Sound",
+      "Electrostatics","Current Electricity",
+      "Capacitors","Magnetic Effect of Current",
+      "Magnetism","Electromagnetic Induction",
+      "Alternating Current","Ray Optics",
+      "Wave Optics","Modern Physics",
+      "Semiconductors & Communication"
+    ]},
+    {id:'jee-math',name:'Mathematics',icon:'📐',color:'#f06878',chapters:[
+      "Sets, Relations & Functions","Trigonometry",
+      "Complex Numbers","Quadratic Equations",
+      "Sequences & Series","Permutations & Combinations",
+      "Binomial Theorem","Matrices & Determinants",
+      "Limits, Continuity & Differentiability",
+      "Differentiation","Applications of Derivatives",
+      "Indefinite Integration","Definite Integration",
+      "Differential Equations","Straight Lines",
+      "Circles","Conic Sections",
+      "3D Geometry","Vectors",
+      "Probability","Statistics"
+    ]}
+  ]
+};
+
+/* ═══════════════════════════════════════════
+   STORAGE HELPERS
+═══════════════════════════════════════════ */
+const gc=()=>{try{return JSON.parse(localStorage.getItem('nc')||'null')}catch{return null}};
+const sc=c=>localStorage.setItem('nc',JSON.stringify(c));
+const gd=()=>{try{return JSON.parse(localStorage.getItem('nd')||'{}')}catch{return{}}};
+const sd2=d=>localStorage.setItem('nd',JSON.stringify(d));
+const dday=ds=>{const d=gd();return d[ds]||{}};
+function setSlot(ds,id,st,nt){const d=gd();if(!d[ds])d[ds]={};if(!d[ds][id])d[ds][id]={};if(st!==undefined)d[ds][id].status=st;if(nt!==undefined)d[ds][id].note=nt;sd2(d)}
+const gSl=(ds,id)=>{const d=gd();return(d[ds]&&d[ds][id])?d[ds][id]:{}};
+const tdy=()=>new Date().toISOString().split('T')[0];
+
+/* ═══════════════════════════════════════════
+   SCHEDULE DATA (dynamic)
+═══════════════════════════════════════════ */
+let SL=[];
+let TOT=0;
+function loadSL(){
+  try{const c=localStorage.getItem('customSL');if(c){const p=JSON.parse(c);if(Array.isArray(p)&&p.length){SL=p;TOT=SL.filter(x=>x.id).length;return;}}}catch(e){}
+  SL=PRESETS[1];TOT=SL.filter(x=>x.id).length;
+}
+
+/* ═══════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════ */
+let cur='s1';
+function goTo(id){
+  if(id===cur)return;
+  const o=document.getElementById(cur),n=document.getElementById(id);
+  o.classList.add('exit');n.classList.add('active');
+  setTimeout(()=>o.classList.remove('active','exit'),380);
+  cur=id;
+}
+
+/* ═══════════════════════════════════════════
+   REGISTRATION
+═══════════════════════════════════════════ */
+function doSetup(){
+  const stu=document.getElementById('fstu').value.trim();
+  const nm=document.getElementById('fnm').value.trim();
+  const ph=document.getElementById('fph').value.trim();
+  const exam=document.getElementById('fexam').value;
+  const pin=document.getElementById('fpin').value.trim();
+  const err=document.getElementById('e1');
+  if(!stu||!nm||!ph||!/^\d{4}$/.test(pin)){err.style.display='block';return}
+  err.style.display='none';
+  sc({stu,nm,ph,pin,exam,setup:tdy()});
+  goTo('s4');
+  setTimeout(initS4,400);
+}
+
+/* ═══════════════════════════════════════════
+   PIN
+═══════════════════════════════════════════ */
+let pb='';
+function initLogin(){const c=gc();document.getElementById('wname').textContent=c.nm;pb='';rdots();document.getElementById('lerr').textContent='';goTo('s2');}
+function kp(n){if(pb.length>=4)return;pb+=n;rdots();if(pb.length===4)setTimeout(chkPin,180)}
+function kdel(){pb=pb.slice(0,-1);rdots();}
+function rdots(){for(let i=0;i<4;i++)document.getElementById('d'+i).className='dot'+(i<pb.length?' on':'');}
+function chkPin(){
+  const c=gc();
+  if(pb===c.pin){document.getElementById('lerr').textContent='';enterApp();}
+  else{
+    document.getElementById('lerr').textContent='Wrong PIN. Try again.';
+    for(let i=0;i<4;i++){const d=document.getElementById('d'+i);d.classList.add('sh');setTimeout(()=>d.classList.remove('sh'),500);}
+    setTimeout(()=>{pb='';rdots();},600);
+  }
+}
+function doLock(){initLogin();}
+
+/* ═══════════════════════════════════════════
+   S4 — SCHEDULE BUILDER
+═══════════════════════════════════════════ */
+const SUBJECTS=[{v:'tp',l:'Physics'},{v:'tc',l:'Chemistry'},{v:'tb',l:'Biology'},{v:'tr',l:'Routine/HW'},{v:'tbr',l:'Break'},{v:'tv',l:'Vlog/Media'}];
+let s4Items=[];
+let s4IdCounter=1;
+let selectedTT=null;
+
+function selectTT(idx){
+  // highlight card
+  document.querySelectorAll('.tt-card').forEach((c,i)=>c.classList.toggle('sel',i===idx||(idx===-1&&i===3)));
+  selectedTT=idx;
+  if(idx>=0){
+    // load preset into s4Items for preview/editing
+    s4Items=PRESETS[idx].map(it=>{
+      if(it.s!==undefined) return {type:'section',s:it.s};
+      return {type:'slot',id:it.id,t:it.t,k:it.k,g:it.g,l:it.l};
+    });
+    s4IdCounter=s4Items.filter(x=>x.type==='slot').length+1;
+    document.getElementById('s4-addbtns').style.display='flex';
+    renderS4();
+  } else {
+    s4Items=[];
+    document.getElementById('s4-slots').innerHTML='';
+    document.getElementById('s4-addbtns').style.display='flex';
+  }
+}
+
+function subjectOptions(sel){return SUBJECTS.map(s=>`<option value="${s.v}"${sel===s.v?' selected':''}>${s.l}</option>`).join('');}
+
+function renderS4(){
+  const container=document.getElementById('s4-slots');
+  container.innerHTML='';
+  s4Items.forEach((item,idx)=>{
+    if(item.type==='section'){
+      const d=document.createElement('div');
+      d.innerHTML=`<div class="sec-divider"><span><input class="slt-inp" type="text" placeholder="Section name…" value="${item.s||''}" oninput="s4Items[${idx}].s=this.value" style="background:transparent;border:none;font-size:9px;color:var(--mt);text-transform:uppercase;letter-spacing:.1em;padding:0;width:120px;"/></span></div>`;
+      container.appendChild(d);
+    } else {
+      const d=document.createElement('div');
+      d.className='slt-row';
+      d.innerHTML=`<button class="slt-del" onclick="removeItem(${idx})">&#10005;</button>
+        <div class="slt-fields three" style="margin-bottom:8px">
+          <div><div class="slt-lbl">Time</div><input class="slt-inp" type="text" placeholder="6:00-8:00 AM" value="${item.t||''}" oninput="s4Items[${idx}].t=this.value"/></div>
+          <div><div class="slt-lbl">Subject</div><select class="slt-sel" onchange="s4Items[${idx}].g=this.value;s4Items[${idx}].l=SUBJECTS.find(s=>s.v===this.value).l">${subjectOptions(item.g)}</select></div>
+          <div><div class="slt-lbl">Label</div><input class="slt-inp" type="text" placeholder="Physics" maxlength="12" value="${item.l||''}" oninput="s4Items[${idx}].l=this.value"/></div>
+        </div>
+        <div class="slt-lbl">Task Description</div>
+        <input class="slt-inp" type="text" placeholder="e.g. Lecture 1 – Physics (Live)" value="${item.k||''}" oninput="s4Items[${idx}].k=this.value" style="width:calc(100% - 28px)"/>`;
+      container.appendChild(d);
+    }
+  });
+}
+
+function addSection(){s4Items.push({type:'section',s:''});renderS4();setTimeout(()=>{const b=document.getElementById('s4-body');b.scrollTop=b.scrollHeight;},50);}
+function addSlot(){s4Items.push({type:'slot',id:s4IdCounter++,t:'',k:'',g:'tp',l:'Physics'});renderS4();setTimeout(()=>{const b=document.getElementById('s4-body');b.scrollTop=b.scrollHeight;},50);}
+function removeItem(idx){s4Items.splice(idx,1);renderS4();}
+
+function saveManualSchedule(){
+  const errEl=document.getElementById('s4-err');
+  if(selectedTT===null&&s4Items.length===0){errEl.textContent='Please select a preset or add slots.';errEl.className='s4-err show';return;}
+  const slots=s4Items.filter(x=>x.type==='slot');
+  if(slots.length===0){errEl.textContent='Please add at least one time slot.';errEl.className='s4-err show';return;}
+  errEl.className='s4-err';
+  let idCount=1;
+  const sl=s4Items.map(it=>{
+    if(it.type==='section') return {s:it.s||'Section'};
+    return {id:idCount++,t:it.t.trim()||'--',k:it.k.trim()||'Task',g:it.g||'tr',l:(it.l||'Task').substring(0,12)};
+  });
+  localStorage.setItem('customSL',JSON.stringify(sl));
+  enterApp();
+}
+
+function skipScheduleUpload(){localStorage.removeItem('customSL');enterApp();}
+function initS4(){if(s4Items.length===0&&selectedTT===null){/* fresh */}}
+
+/* ═══════════════════════════════════════════
+   ENTER APP
+═══════════════════════════════════════════ */
+function enterApp(){
+  loadSL();
+  const c=gc();
+  document.getElementById('asub').textContent=(c.exam||'NEET')+' 2027 · '+c.stu;
+  cdt=tdy();document.getElementById('di').value=cdt;
+  // set default syllabus exam
+  setSylExam(c.exam||'NEET');
+  setHomeTab('schedule');
+  setTab('today');
+  goTo('s3');
+}
+
+/* ═══════════════════════════════════════════
+   HOME TABS
+═══════════════════════════════════════════ */
+function setHomeTab(t){
+  document.getElementById('ht-sched').className='home-tab'+(t==='schedule'?' on':'');
+  document.getElementById('ht-syl').className='home-tab'+(t==='syllabus'?' on':'');
+  document.getElementById('hp-schedule').className='home-panel'+(t==='schedule'?' on':'');
+  document.getElementById('hp-syllabus').className='home-panel'+(t==='syllabus'?' on':'');
+  if(t==='syllabus') renderSyllabus();
+}
+
+/* ═══════════════════════════════════════════
+   SCHEDULE — TODAY / WEEK / REPORT
+═══════════════════════════════════════════ */
+let cdt=tdy();
+let ctab='today';
+function setTab(t){
+  const m={today:'tt',week:'tw',report:'tr'};
+  const p={today:'pt',week:'pw',report:'prp'};
+  Object.keys(m).forEach(x=>{
+    document.getElementById(m[x]).className='tab'+(x===t?' on':'');
+    document.getElementById(p[x]).className='panel'+(x===t?' on':'');
+  });
+  ctab=t;
+  if(t==='today')rT();
+  if(t==='week'){wo=0;rW();}
+  if(t==='report')rR();
+}
+function onDC(){cdt=document.getElementById('di').value;rT();}
+function goToday(){cdt=tdy();document.getElementById('di').value=cdt;rT();}
+function rT(){
+  const body=document.getElementById('sch');body.innerHTML='';
+  const dd=dday(cdt);let dn=0,ms=0;
+  SL.forEach(s=>{
+    if(s.s){const h=document.createElement('div');h.className='sh2';h.textContent=s.s;body.appendChild(h);return;}
+    const sd=dd[s.id]||{};const st=sd.status||null;const nt=sd.note||'';
+    if(st==='done')dn++;if(st==='missed')ms++;
+    const nc=st==='done'?'snm dk':st==='missed'?'snm mr':'snm';
+    const row=document.createElement('div');row.className='slr';
+    row.innerHTML='<div class="stm">'+s.t+'</div><div><span class="stg '+s.g+'">'+s.l+'</span><div class="'+nc+'">'+s.k+'</div><textarea class="nb" placeholder="Add note…" rows="1" onchange="svN('+s.id+',this.value)" oninput="this.style.height=\'\';this.style.height=this.scrollHeight+\'px\'">'+nt+'</textarea></div><div class="ac"><button class="ab '+(st==='done'?'ton':'')+'" onclick="tog('+s.id+',\'done\')">&#10003;</button></div><div class="ac"><button class="ab '+(st==='missed'?'xon':'')+'" onclick="tog('+s.id+',\'missed\')">&#10007;</button></div>';
+    body.appendChild(row);
+  });
+  const pe=TOT-dn-ms;
+  document.getElementById('cd').textContent=dn;
+  document.getElementById('cm').textContent=ms;
+  document.getElementById('cp').textContent=pe;
+  document.getElementById('pf').style.width=(TOT>0?Math.round(dn/TOT*100):0)+'%';
+}
+function tog(id,st){const c=gSl(cdt,id).status||null;setSlot(cdt,id,c===st?null:st,undefined);rT();}
+function svN(id,n){setSlot(cdt,id,gSl(cdt,id).status||null,n);}
+let wo=0;
+function sw(d){wo+=d;rW();}
+function ds3(d){return d.toISOString().split('T')[0];}
+function rW(){
+  const ws=new Date();ws.setDate(ws.getDate()-ws.getDay()+1+wo*7);ws.setHours(0,0,0,0);
+  const days=[];for(let i=0;i<7;i++){const x=new Date(ws);x.setDate(ws.getDate()+i);days.push(x);}
+  document.getElementById('wlbl').textContent=days[0].toLocaleDateString('en-IN',{day:'numeric',month:'short'})+' – '+days[6].toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+  const grid=document.getElementById('wgrid');grid.innerHTML='';
+  const DL=['M','T','W','T','F','S','S'],td=tdy();
+  let tD=0,tM=0,ac=0;
+  days.forEach((d,i)=>{
+    const dstr=ds3(d),dd=dday(dstr);
+    let dn=0,ms=0;Object.values(dd).forEach(x=>{if(x.status==='done')dn++;else if(x.status==='missed')ms++;});
+    tD+=dn;tM+=ms;if(dn+ms>0)ac++;
+    const p=TOT>0?Math.round(dn/TOT*100):0;
+    const col=p>=75?'#3ecf8e':p>=40?'#f7c948':p>0?'#f06878':'rgba(255,255,255,0.08)';
+    const c=document.createElement('div');c.className='dc'+(dstr===td?' tdy':'');
+    c.innerHTML='<div class="dcd">'+DL[i]+'</div><div class="dcn">'+d.getDate()+'</div><div class="dcs">'+dn+'/'+TOT+'</div><div class="dcb"><div class="dcf" style="width:'+p+'%;background:'+col+'"></div></div>';
+    c.onclick=()=>{cdt=dstr;document.getElementById('di').value=dstr;setTab('today');};
+    grid.appendChild(c);
+  });
+  const wp=TOT*7>0?Math.round(tD/(TOT*7)*100):0;
+  document.getElementById('wsum').innerHTML='<h4>Week Summary</h4><div class="wr"><span class="wrl">Done</span><span class="wrv" style="color:var(--gn)">'+tD+'</span></div><div class="wr"><span class="wrl">Missed</span><span class="wrv" style="color:var(--rd)">'+tM+'</span></div><div class="wr"><span class="wrl">Active Days</span><span class="wrv">'+ac+' / 7</span></div><div class="wr"><span class="wrl">Completion</span><span class="wrv" style="color:var(--ac)">'+wp+'%</span></div>';
+}
+function rR(){
+  const data=gd(),now=new Date(),mon=now.getMonth(),yr=now.getFullYear();
+  let tD=0,tM=0,tP=0,ac=0;const rows=[];
+  Object.entries(data).forEach(([dstr,dd])=>{
+    const x=new Date(dstr+'T00:00:00');if(x.getMonth()!==mon||x.getFullYear()!==yr)return;
+    let dn=0,ms=0;Object.values(dd).forEach(s=>{if(s.status==='done')dn++;else if(s.status==='missed')ms++;});
+    tD+=dn;tM+=ms;tP+=TOT;if(dn+ms>0)ac++;rows.push({dstr,dn,ms});
+  });
+  const p=tP>0?Math.round(tD/tP*100):0;
+  document.getElementById('mstat').innerHTML='<div class="mb3"><div class="mn" style="color:var(--gn)">'+tD+'</div><div class="ml">Done</div></div><div class="mb3"><div class="mn" style="color:var(--rd)">'+tM+'</div><div class="ml">Missed</div></div><div class="mb3"><div class="mn" style="color:var(--ac)">'+p+'%</div><div class="ml">Completion</div></div><div class="mb3"><div class="mn">'+ac+'</div><div class="ml">Active Days</div></div>';
+  rows.sort((a,b)=>a.dstr.localeCompare(b.dstr));
+  const det=document.getElementById('mdays');
+  if(!rows.length){det.innerHTML='<p style="font-size:13px;color:var(--mt);margin-top:8px;">No data this month yet.</p>';return;}
+  det.innerHTML='<div style="margin-top:8px;">'+rows.map(r=>{const pp=Math.round(r.dn/TOT*100);const col=pp>=75?'var(--gn)':pp>=40?'var(--ac)':'var(--rd)';const dl=new Date(r.dstr+'T00:00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short',weekday:'short'});return'<div class="wr"><span class="wrl" style="font-size:12px">'+dl+'</span><span class="wrv" style="color:'+col+';font-size:14px">'+r.dn+'/'+TOT+'</span></div>';}).join('')+'</div>';
+}
+function buildRpt(){
+  const data=gd(),c=gc(),now=new Date(),mon=now.getMonth(),yr=now.getFullYear();
+  const mn=now.toLocaleDateString('en-IN',{month:'long',year:'numeric'});
+  let tD=0,tM=0,tP=0,ac=0;const lines=[];
+  Object.entries(data).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([dstr,dd])=>{
+    const x=new Date(dstr+'T00:00:00');if(x.getMonth()!==mon||x.getFullYear()!==yr)return;
+    let dn=0,ms=0;Object.values(dd).forEach(s=>{if(s.status==='done')dn++;else if(s.status==='missed')ms++;});
+    tD+=dn;tM+=ms;tP+=TOT;if(dn+ms>0)ac++;
+    lines.push(x.toLocaleDateString('en-IN',{day:'numeric',month:'short'})+': '+dn+'/'+TOT+' ('+Math.round(dn/TOT*100)+'%)');
+  });
+  const p=tP>0?Math.round(tD/tP*100):0;
+  return'NEET/JEE Tracker – Monthly Report\n'+mn+'\n\nStudent: '+c.stu+'\nParent: '+c.nm+'\n\nDone: '+tD+'\nMissed: '+tM+'\nActive Days: '+ac+'\nCompletion: '+p+'%\n\nDay-wise:\n'+(lines.join('\n')||'No data.')+'\n\nSent from NEET/JEE Tracker App';
+}
+function sendWA(){const c=gc();window.open('https://wa.me/'+c.ph.replace(/\D/g,'')+'?text='+encodeURIComponent(buildRpt()),'_blank');}
+function openMdl(){document.getElementById('mdl').classList.add('open');}
+function closeMdl(){document.getElementById('mdl').classList.remove('open');}
+function doReset(){
+  const data=gd(),now=new Date(),mon=now.getMonth(),yr=now.getFullYear();
+  Object.keys(data).forEach(dstr=>{const d=new Date(dstr+'T00:00:00');if(d.getMonth()===mon&&d.getFullYear()===yr)delete data[dstr];});
+  sd2(data);closeMdl();rR();
+}
+
+/* ═══════════════════════════════════════════
+   SYLLABUS TRACKER
+═══════════════════════════════════════════ */
+let curSylExam='NEET';
+let openSubject=null;
+
+function getSylData(){try{return JSON.parse(localStorage.getItem('sylData')||'{}')}catch{return{};}}
+function saveSylData(d){localStorage.setItem('sylData',JSON.stringify(d));}
+
+// status: null | 'done' | 'skip'
+function getSylStatus(subjId,chapIdx,col){
+  const d=getSylData();
+  return(d[subjId]&&d[subjId][chapIdx]&&d[subjId][chapIdx][col])||null;
+}
+function toggleSylStatus(subjId,chapIdx,col){
+  const d=getSylData();
+  if(!d[subjId])d[subjId]={};
+  if(!d[subjId][chapIdx])d[subjId][chapIdx]={};
+  const cur=d[subjId][chapIdx][col]||null;
+  d[subjId][chapIdx][col]=cur==='done'?'skip':cur==='skip'?null:'done';
+  saveSylData(d);
+  renderSyllabus();
+}
+
+function getSubjProgress(subjId,chapters){
+  const d=getSylData();
+  const cols=['lec','mod','pyq'];
+  let total=chapters.length*3,done=0;
+  chapters.forEach((_,i)=>{cols.forEach(c=>{if((d[subjId]&&d[subjId][i]&&d[subjId][i][c])==='done')done++;});});
+  return{done,total,pct:total>0?Math.round(done/total*100):0};
+}
+
+function setSylExam(exam){
+  curSylExam=exam;
+  document.getElementById('set-neet').className='syl-exam-tab'+(exam==='NEET'?' on':'');
+  document.getElementById('set-jee').className='syl-exam-tab'+(exam==='JEE'?' on':'');
+  openSubject=null;
+  renderSyllabus();
+}
+
+function renderSyllabus(){
+  const list=document.getElementById('syl-subj-list');
+  list.innerHTML='';
+  const subjects=SYLLABUS[curSylExam];
+  subjects.forEach(subj=>{
+    const prog=getSubjProgress(subj.id,subj.chapters);
+    const isOpen=openSubject===subj.id;
+    const card=document.createElement('div');
+    card.className='subj-card';
+    // progress bar
+    const pbar=`<div class="subj-pbar"><div class="subj-pfill" style="width:${prog.pct}%"></div></div>`;
+    // header
+    card.innerHTML=`${pbar}<div class="subj-head" onclick="toggleSubject('${subj.id}')">
+      <span class="subj-icon">${subj.icon}</span>
+      <span class="subj-name" style="color:${subj.color}">${subj.name}</span>
+      <span class="subj-prog">${prog.done}/${prog.total}</span>
+      <span class="subj-arrow ${isOpen?'open':''}">&#9654;</span>
+    </div>
+    <div class="subj-chapters ${isOpen?'open':''}">
+      <div class="ch-thead">
+        <span>Chapter</span>
+        <span>Lec</span>
+        <span>Mod</span>
+        <span>PYQ</span>
+      </div>
+      ${subj.chapters.map((ch,i)=>{
+        const cols=['lec','mod','pyq'];
+        const ticks=cols.map(col=>{
+          const st=getSylStatus(subj.id,i,col);
+          const cls=st==='done'?'done':st==='skip'?'skip':'';
+          const icon=st==='done'?'✓':st==='skip'?'✗':'';
+          return`<div class="ch-tick"><button class="tick-btn ${cls}" onclick="toggleSylStatus('${subj.id}',${i},'${col}')">${icon}</button></div>`;
+        }).join('');
+        return`<div class="ch-row">
+          <div><div class="ch-num">${i+1}</div><div class="ch-name">${ch}</div></div>
+          ${ticks}
+        </div>`;
+      }).join('')}
+    </div>`;
+    list.appendChild(card);
+  });
+  const pad=document.createElement('div');pad.className='bottom-pad';
+  list.appendChild(pad);
+}
+
+function toggleSubject(id){
+  openSubject=openSubject===id?null:id;
+  renderSyllabus();
+}
+
+/* ═══════════════════════════════════════════
+   BOOT
+═══════════════════════════════════════════ */
+window.onload=()=>{
+  setTimeout(()=>{
+    const splash=document.getElementById('splash');
+    splash.style.transition='opacity .4s';
+    splash.style.opacity='0';
+    setTimeout(()=>{splash.remove();},400);
+    const c=gc();
+    if(!c){cur='s1';document.getElementById('s1').classList.add('active');}
+    else{initLogin();}
+  },2700);
+};
+</script>
+</body>
+</html>
